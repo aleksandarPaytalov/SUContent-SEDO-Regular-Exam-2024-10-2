@@ -16,6 +16,8 @@ jobs:
         working-directory: SUContent-SEDO-Regular-Exam-2024-10-2
 
     steps:
+    - name: Debug folder structure
+      run: ls -R
     - name: Repository checkout
       uses: actions/checkout@v4
 
