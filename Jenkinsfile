@@ -1,47 +1,44 @@
 pipeline {
     agent any
-    
+
     stages {
-        stage('Check Branch') {
-            steps {
-                script {
-                    if (env.BRANCH_NAME != 'feature-ci-pipeline') {
-                        currentBuild.result = 'ABORTED'
-                        error("Pipeline only runs on feature-ci-pipeline branch. Current branch: ${env.BRANCH_NAME}")
+        stage('Conditional Build') {
+            when {
+                expression {
+                    return env.BRANCH_NAME == 'feature-ci-pipeline'
+                }
+            }
+            stages {
+                stage('Checkout') {
+                    steps {
+                        checkout scm
                     }
-                    echo "Running on correct branch: ${env.BRANCH_NAME}"
+                }
+
+                stage('Restore dependencies') {
+                    steps {
+                        bat 'dotnet restore'
+                    }
+                }
+
+                stage('Build') {
+                    steps {
+                        bat 'dotnet build --no-restore'
+                    }
+                }
+
+                stage('Test') {
+                    steps {
+                        bat 'dotnet test --no-build --verbosity normal'
+                    }
                 }
             }
         }
-        
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-        
-        stage('Restore dependencies') {
-            steps {
-                bat 'dotnet restore Homies.sln'
-            }
-        }
-        
-        stage('Build solution') {
-            steps {
-                bat 'dotnet build Homies.sln --no-restore'
-            }
-        }
-        
-        stage('Run Unit Tests') {
-            steps {
-                bat 'dotnet test **/*UnitTests.csproj --no-build --verbosity normal'
-            }
-        }
-        
-        stage('Run Integration Tests') {
-            steps {
-                bat 'dotnet test **/*IntegrationTests.csproj --no-build --verbosity normal'
-            }
+    }
+
+    post {
+        always {
+            echo "Pipeline finished for branch: ${env.BRANCH_NAME}"
         }
     }
 }
