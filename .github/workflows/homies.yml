@@ -31,8 +31,9 @@ jobs:
 
     - name: Run Unit Tests
       if: github.ref == 'refs/heads/develop'
-      run: dotnet test Homies.UnitTests/Homies.UnitTests.csproj --no-build --verbosity normal
-
+      run: dotnet test **/*UnitTests.csproj --no-build --verbosity normal
+        
     - name: Run Integration Tests
       if: github.ref == 'refs/heads/staging'
-      run: dotnet test Homes.IntegrationTests/Homes.IntegrationTests.csproj --no-build --verbosity normal
+      run: dotnet test **/*IntegrationTests.csproj --no-build --verbosity normal
+
