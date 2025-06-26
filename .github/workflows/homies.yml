@@ -12,8 +12,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Repository checkout
+    - name: Checkout repository
       uses: actions/checkout@v4
+
+    - name: Debug folder structure
+      run: ls -R
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -21,17 +24,16 @@ jobs:
         dotnet-version: 6.0.x
 
     - name: Restore dependencies
-      run: dotnet restore 
+      run: dotnet restore Homies.sln
 
     - name: Build solution
-      run: dotnet build --no-restore
+      run: dotnet build Homies.sln --no-restore
 
-    # Run Unit Tests on develop
     - name: Run Unit Tests
       if: github.ref == 'refs/heads/develop'
-      run: dotnet test Homes.UnitTests/Homes.UnitTests.csproj --no-build --verbosity normal
-
-    # Run Integration Tests on staging
+      run: dotnet test **/*UnitTests.csproj --no-build --verbosity normal
+        
     - name: Run Integration Tests
       if: github.ref == 'refs/heads/staging'
-      run: dotnet test Homes.IntegrationTests/Homes.IntegrationTests.csproj --no-build --verbosity normal
+      run: dotnet test **/*IntegrationTests.csproj --no-build --verbosity normal
+
