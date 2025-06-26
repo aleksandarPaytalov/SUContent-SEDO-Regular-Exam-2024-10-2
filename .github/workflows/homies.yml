@@ -11,6 +11,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: SUContent-SEDO-Regular-Exam-2024-10-2
+
     steps:
     - name: Repository checkout
       uses: actions/checkout@v4
