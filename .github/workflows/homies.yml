@@ -11,15 +11,12 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: SUContent-SEDO-Regular-Exam-2024-10-2
-
     steps:
-    - name: Debug folder structure
-      run: ls -R
     - name: Repository checkout
       uses: actions/checkout@v4
+
+    - name: Debug folder structure
+      run: ls -R
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -27,17 +24,19 @@ jobs:
         dotnet-version: 6.0.x
 
     - name: Restore dependencies
-      run: dotnet restore 
+      run: dotnet restore
+      working-directory: SUContent-SEDO-Regular-Exam-2024-10-2
 
     - name: Build solution
       run: dotnet build --no-restore
+      working-directory: SUContent-SEDO-Regular-Exam-2024-10-2
 
-    # Run Unit Tests on develop
     - name: Run Unit Tests
       if: github.ref == 'refs/heads/develop'
       run: dotnet test Homes.UnitTests/Homes.UnitTests.csproj --no-build --verbosity normal
+      working-directory: SUContent-SEDO-Regular-Exam-2024-10-2
 
-    # Run Integration Tests on staging
     - name: Run Integration Tests
       if: github.ref == 'refs/heads/staging'
       run: dotnet test Homes.IntegrationTests/Homes.IntegrationTests.csproj --no-build --verbosity normal
+      working-directory: SUContent-SEDO-Regular-Exam-2024-10-2
