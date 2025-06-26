@@ -1,20 +1,22 @@
 pipeline {
     agent any
     
-    when {
-        branch 'feature-ci-pipeline'
-    }
-    
     stages {
-        stage('Checkout') {
+        stage('Check Branch') {
             steps {
-                checkout scm
+                script {
+                    if (env.BRANCH_NAME != 'feature-ci-pipeline') {
+                        currentBuild.result = 'ABORTED'
+                        error("Pipeline only runs on feature-ci-pipeline branch. Current branch: ${env.BRANCH_NAME}")
+                    }
+                    echo "Running on correct branch: ${env.BRANCH_NAME}"
+                }
             }
         }
         
-        stage('Debug folder structure') {
+        stage('Checkout') {
             steps {
-                bat 'dir /s'
+                checkout scm
             }
         }
         
