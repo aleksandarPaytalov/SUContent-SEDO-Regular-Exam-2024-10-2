@@ -3,10 +3,8 @@ pipeline {
 
     stages {
         stage('Conditional Build') {
-            when {
-                expression {
-                    return env.BRANCH_NAME == 'feature-ci-pipeline'
-                }
+            when { 
+                branch 'feature-ci-pipeline' 
             }
             stages {
                 stage('Checkout') {
