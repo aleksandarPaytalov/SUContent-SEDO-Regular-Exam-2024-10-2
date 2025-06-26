@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Repository checkout
+    - name: Checkout repository
       uses: actions/checkout@v4
 
     - name: Debug folder structure
@@ -24,19 +24,15 @@ jobs:
         dotnet-version: 6.0.x
 
     - name: Restore dependencies
-      run: dotnet restore
-      working-directory: SUContent-SEDO-Regular-Exam-2024-10-2
+      run: dotnet restore Homies.sln
 
     - name: Build solution
-      run: dotnet build --no-restore
-      working-directory: SUContent-SEDO-Regular-Exam-2024-10-2
+      run: dotnet build Homies.sln --no-restore
 
     - name: Run Unit Tests
       if: github.ref == 'refs/heads/develop'
-      run: dotnet test Homes.UnitTests/Homes.UnitTests.csproj --no-build --verbosity normal
-      working-directory: SUContent-SEDO-Regular-Exam-2024-10-2
+      run: dotnet test Homies.UnitTests/Homies.UnitTests.csproj --no-build --verbosity normal
 
     - name: Run Integration Tests
       if: github.ref == 'refs/heads/staging'
       run: dotnet test Homes.IntegrationTests/Homes.IntegrationTests.csproj --no-build --verbosity normal
-      working-directory: SUContent-SEDO-Regular-Exam-2024-10-2
